@@ -1,18 +1,41 @@
 {
   "projects": [
     {
-      "title": "Build 1",
-      "description": "Description 1",
+      "title": "Building",
+      "description": "Side Project",
       "images": [
-        "images/test1.png"
+        "images/project1-1.png",
+        "images/project1-2.png",
+        "images/project1-3.png"
       ]
     },
     
     {
-      "title": "Build 2",
-      "description": "Description 2",
+      "title": "Building",
+      "description": "Side Project",
       "images": [
-        "images/test2.png"
+        "images/project3-1.png",
+        "images/project3-2.png",
+        "images/project3-3.png"
+      ]
+    },
+    
+    {
+      "title": "Mickey Mouse Clubhouse",
+      "description": "Recreation of the Mickey Mouse Clubhouse",
+      "images": [
+        "images/clubhouse1.png",
+        "images/clubhouse2.png",
+        "images/clubhouse3.png",
+        "images/clubhouse4.png"
+      ]
+    },
+    
+    {
+      "title": "Building",
+      "description": "Side Project",
+      "images": [
+        "images/project2-3.png"
       ]
     }
 
