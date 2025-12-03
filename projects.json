@@ -1,0 +1,21 @@
+{
+  "projects": [
+    {
+      "title": "Build 1",
+      "description": "Description 1",
+      "images": [
+        "images/test1.png"
+      ]
+    },
+    
+    {
+      "title": "Build 2",
+      "description": "Description 2",
+      "images": [
+        "images/test2.png"
+      ]
+    }
+
+    
+  ]
+}
