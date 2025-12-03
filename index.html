@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="favicon.png" type="image/x-icon">
+    <title>Whirdle - Minecraft Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #000;
+            color: #ffffff;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        .background-images {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(60px) brightness(0.4);
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        
+        .bg-image.active {
+            opacity: 1;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        .header p {
+            color: #b0b0b0;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 935px;
+            margin: 0 auto;
+        }
+        
+        .project-card {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        .carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .carousel-images {
+            display: flex;
+            scroll-snap-type: x mandatory;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .carousel-images::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .carousel-images {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .carousel-image {
+            min-width: 100%;
+            scroll-snap-align: start;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .project-info {
+            padding: 16px;
+        }
+        
+        .project-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+        
+        .project-description {
+            color: #d0d0d0;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 0;
+        }
+        
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .dot.active {
+            background: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-images" id="background-container">
+        <!-- Background images will be added here -->
+    </div>
+    
+    <div class="content-wrapper">
+        <div class="header">
+	<h1>Professional Portfolio</h1>
+	<p>
+    	Instagram: <a href="https://www.instagram.com/whirdle_" target="_blank">Whirdle_</a><br>
+    	Patreon: <a href="https://www.patreon.com/whirdle" target="_blank">whirdle</a><br>
+    	Discord: <a href="https://discord.whirdle.com" target="_blank">My Discord server</a><br>
+	</p>
+</div>
+
+        
+        <div class="container" id="projects-container">
+            <!-- Projects will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Load projects from JSON file
+        fetch('projects.json')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('projects-container');
+                const bgContainer = document.getElementById('background-container');
+                let allImages = [];
+                
+                data.projects.forEach((project, projectIndex) => {
+                    // Create project card
+                    const card = document.createElement('div');
+                    card.className = 'project-card';
+                    card.dataset.projectIndex = projectIndex;
+                    
+                    // Create carousel
+                    const carousel = document.createElement('div');
+                    carousel.className = 'carousel';
+                    
+                    const carouselImages = document.createElement('div');
+                    carouselImages.className = 'carousel-images';
+                    
+                    // Add images
+                    project.images.forEach(imageSrc => {
+                        const imageDiv = document.createElement('div');
+                        imageDiv.className = 'carousel-image';
+                        const img = document.createElement('img');
+                        img.src = imageSrc;
+                        img.alt = project.title;
+                        imageDiv.appendChild(img);
+                        carouselImages.appendChild(imageDiv);
+                        
+                        // Add to background images array
+                        allImages.push(imageSrc);
+                    });
+                    
+                    carousel.appendChild(carouselImages);
+                    card.appendChild(carousel);
+                    
+                    // Add dots if more than one image
+                    if (project.images.length > 1) {
+                        const dotsDiv = document.createElement('div');
+                        dotsDiv.className = 'carousel-dots';
+                        
+                        project.images.forEach((_, index) => {
+                            const dot = document.createElement('div');
+                            dot.className = index === 0 ? 'dot active' : 'dot';
+                            dotsDiv.appendChild(dot);
+                        });
+                        
+                        card.appendChild(dotsDiv);
+                        
+                        // Update dots on scroll
+                        carouselImages.addEventListener('scroll', () => {
+                            const scrollLeft = carouselImages.scrollLeft;
+                            const width = carouselImages.offsetWidth;
+                            const currentIndex = Math.round(scrollLeft / width);
+                            
+                            const dots = dotsDiv.querySelectorAll('.dot');
+                            dots.forEach((dot, index) => {
+                                dot.classList.toggle('active', index === currentIndex);
+                            });
+                        });
+                    }
+                    
+                    // Add project info
+                    const info = document.createElement('div');
+                    info.className = 'project-info';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'project-title';
+                    title.textContent = project.title;
+                    
+                    const description = document.createElement('div');
+                    description.className = 'project-description';
+                    description.textContent = project.description;
+                    
+                    info.appendChild(title);
+                    info.appendChild(description);
+                    card.appendChild(info);
+                    
+                    container.appendChild(card);
+                });
+                
+                // Create background images
+                allImages.forEach((imageSrc, index) => {
+                    const bgDiv = document.createElement('div');
+                    bgDiv.className = 'bg-image';
+                    bgDiv.style.backgroundImage = `url(${imageSrc})`;
+                    bgDiv.dataset.index = index;
+                    bgContainer.appendChild(bgDiv);
+                });
+                
+                // Show first background image
+                if (bgContainer.children.length > 0) {
+                    bgContainer.children[0].classList.add('active');
+                }
+                
+                // Update background based on scroll position
+                let currentBgIndex = 0;
+                
+                function updateBackground() {
+                    const scrollY = window.scrollY;
+                    const windowHeight = window.innerHeight;
+                    const cards = document.querySelectorAll('.project-card');
+                    
+                    let newBgIndex = 0;
+                    
+                    cards.forEach((card, cardIndex) => {
+                        const rect = card.getBoundingClientRect();
+                        const cardTop = rect.top + scrollY;
+                        const cardMiddle = cardTop + rect.height / 2;
+                        
+                        if (scrollY + windowHeight / 2 >= cardMiddle) {
+                            const project = data.projects[cardIndex];
+                            let imageOffset = 0;
+                            
+                            for (let i = 0; i < cardIndex; i++) {
+                                imageOffset += data.projects[i].images.length;
+                            }
+                            
+                            newBgIndex = imageOffset;
+                        }
+                    });
+                    
+                    if (newBgIndex !== currentBgIndex) {
+                        const bgImages = bgContainer.querySelectorAll('.bg-image');
+                        bgImages.forEach(img => img.classList.remove('active'));
+                        if (bgImages[newBgIndex]) {
+                            bgImages[newBgIndex].classList.add('active');
+                        }
+                        currentBgIndex = newBgIndex;
+                    }
+                }
+                
+                window.addEventListener('scroll', updateBackground);
+                updateBackground();
+            })
+            .catch(error => {
+                console.error('Error loading projects:', error);
+                document.getElementById('projects-container').innerHTML = 
+                    '<p style="text-align: center; color: #b0b0b0;">Error loading projects. Make sure projects.json exists!</p>';
+            });
+    </script>
+</body>
+</html>
